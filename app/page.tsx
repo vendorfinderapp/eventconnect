@@ -206,10 +206,10 @@ export default function HomePage() {
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
           <div>
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
-              EventConnect
+              SceneRoam
             </h1>
             <p className="text-gray-600 mt-3 text-sm md:text-lg max-w-2xl">
-              Discover vendor events, save your favorites, and find the best places to apply next.
+              Discover events, find places to vend, and explore what’s happening around you.
             </p>
           </div>
 
@@ -239,7 +239,7 @@ export default function HomePage() {
 
               {role === 'host' && (
                 <Link href="/add-event" className="px-3 py-2 rounded-lg bg-black text-white hover:opacity-90">
-                  Add Event
+                  Post Event
                 </Link>
               )}
 
@@ -301,7 +301,7 @@ export default function HomePage() {
         </div>
 
         <div className="mt-4" ref={typeDropdownRef}>
-          <p className="text-sm font-medium mb-2">Event Types</p>
+          <p className="text-sm font-medium mb-2">Browse by Event Type</p>
 
           <div className="relative">
             <button
