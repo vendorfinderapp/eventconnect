@@ -34,6 +34,9 @@ export default function EditEventPage() {
   const [location, setLocation] = useState('')
   const [eventDate, setEventDate] = useState('')
   const [imageUrl, setImageUrl] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
+
   const [websiteLink, setWebsiteLink] = useState('')
   const [applyLink, setApplyLink] = useState('')
   const [eventStatus, setEventStatus] = useState('open')
@@ -120,6 +123,33 @@ export default function EditEventPage() {
 
     setSaving(true)
 
+    let finalImageUrl = imageUrl
+
+    if (imageFile) {
+      setUploadingImage(true)
+
+      const fileExt = imageFile.name.split('.').pop()
+      const fileName = `${id}-${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('event-images')
+        .upload(fileName, imageFile)
+
+      if (uploadError) {
+        setMessage(uploadError.message)
+        setUploadingImage(false)
+        setSaving(false)
+        return
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('event-images')
+        .getPublicUrl(fileName)
+
+      finalImageUrl = publicUrlData.publicUrl
+      setUploadingImage(false)
+    }
+
     let formattedWebsiteLink = websiteLink
     if (formattedWebsiteLink && !formattedWebsiteLink.startsWith('http')) {
       formattedWebsiteLink = 'https://' + formattedWebsiteLink
@@ -137,7 +167,7 @@ export default function EditEventPage() {
         description,
         location,
         event_date: eventDate,
-        image_url: imageUrl,
+        image_url: finalImageUrl,
         website_link: formattedWebsiteLink,
         apply_link: formattedApplyLink,
         event_status: eventStatus,
@@ -253,9 +283,8 @@ export default function EditEventPage() {
                 </span>
 
                 <svg
-                  className={`w-4 h-4 transition-transform ${
-                    showEventTypeDropdown ? 'rotate-180' : ''
-                  }`}
+                  className={`w-4 h-4 transition-transform ${showEventTypeDropdown ? 'rotate-180' : ''
+                    }`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -319,6 +348,16 @@ export default function EditEventPage() {
 
           <div className="space-y-4">
             <div>
+              <label className="block text-sm font-medium mb-1">Upload Image</label>
+              <input
+                className="border p-3 w-full rounded-lg bg-white"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+              />
+            </div>
+
+            <div>
               <label className="block text-sm font-medium mb-1">Image URL</label>
               <input
                 className="border p-3 w-full rounded-lg"
@@ -359,7 +398,7 @@ export default function EditEventPage() {
             disabled={saving}
             className="bg-black text-white px-5 py-3 rounded-lg disabled:opacity-50"
           >
-            {saving ? 'Saving Changes...' : 'Save Changes'}
+            {saving ? (uploadingImage ? 'Uploading Image...' : 'Saving Changes...') : 'Save Changes'}
           </button>
 
           {message && <p className="text-sm text-gray-700">{message}</p>}

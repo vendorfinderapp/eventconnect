@@ -22,12 +22,24 @@ const EVENT_TYPE_OPTIONS = [
   'Other',
 ]
 
+const STATE_OPTIONS = [
+  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+  'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+  'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+  'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+  'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
+]
+
 export default function AddEventPage() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [location, setLocation] = useState('')
+  const [streetAddress, setStreetAddress] = useState('')
+  const [city, setCity] = useState('')
+  const [state, setState] = useState('')
   const [eventDate, setEventDate] = useState('')
   const [imageUrl, setImageUrl] = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
   const [websiteLink, setWebsiteLink] = useState('')
   const [applyLink, setApplyLink] = useState('')
   const [eventStatus, setEventStatus] = useState('open')
@@ -112,12 +124,48 @@ export default function AddEventPage() {
 
     setMessage('')
 
-    if (!title || !description || !location || !eventDate || !websiteLink || !userId) {
+    if (
+      !title ||
+      !description ||
+      !streetAddress ||
+      !city ||
+      !state ||
+      !eventDate ||
+      !websiteLink ||
+      !userId
+    ) {
       setMessage('Please fill out all required fields.')
       return
     }
 
     setSaving(true)
+
+    let finalImageUrl = imageUrl
+
+    if (imageFile) {
+      setUploadingImage(true)
+
+      const fileExt = imageFile.name.split('.').pop()
+      const fileName = `${userId}-${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('event-images')
+        .upload(fileName, imageFile)
+
+      if (uploadError) {
+        setMessage(uploadError.message)
+        setUploadingImage(false)
+        setSaving(false)
+        return
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('event-images')
+        .getPublicUrl(fileName)
+
+      finalImageUrl = publicUrlData.publicUrl
+      setUploadingImage(false)
+    }
 
     let formattedWebsiteLink = websiteLink
     if (formattedWebsiteLink && !formattedWebsiteLink.startsWith('http')) {
@@ -129,13 +177,15 @@ export default function AddEventPage() {
       formattedApplyLink = 'https://' + formattedApplyLink
     }
 
+    const formattedLocation = `${streetAddress.trim()}, ${city.trim()}, ${state}`
+
     const { error } = await supabase.from('events').insert([
       {
         title,
         description,
-        location,
+        location: formattedLocation,
         event_date: eventDate,
-        image_url: imageUrl,
+        image_url: finalImageUrl,
         website_link: formattedWebsiteLink,
         apply_link: formattedApplyLink,
         event_status: eventStatus,
@@ -154,9 +204,13 @@ export default function AddEventPage() {
     setMessage('Event created successfully.')
     setTitle('')
     setDescription('')
-    setLocation('')
+    setStreetAddress('')
+    setCity('')
+    setState('')
     setEventDate('')
     setImageUrl('')
+    setImageFile(null)
+    setUploadingImage(false)
     setWebsiteLink('')
     setApplyLink('')
     setEventStatus('open')
@@ -226,14 +280,57 @@ export default function AddEventPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Location</label>
+              <label className="block text-sm font-medium mb-1">Street Address</label>
               <input
                 className="border p-3 w-full rounded-lg"
                 type="text"
-                placeholder="Enter location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Enter street address"
+                value={streetAddress}
+                onChange={(e) => setStreetAddress(e.target.value)}
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">City</label>
+                <input
+                  className="border p-3 w-full rounded-lg"
+                  type="text"
+                  placeholder="Enter city"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">State</label>
+                <div className="relative">
+                  <select
+                    className="border h-[50px] px-3 w-full rounded-lg bg-white appearance-none pr-10"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                  >
+                    <option value="">Select state</option>
+                    {STATE_OPTIONS.map((stateOption) => (
+                      <option key={stateOption} value={stateOption}>
+                        {stateOption}
+                      </option>
+                    ))}
+                  </select>
+
+                  <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                    <svg
+                      className="w-4 h-4 text-gray-800"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -270,9 +367,8 @@ export default function AddEventPage() {
                 </span>
 
                 <svg
-                  className={`w-4 h-4 transition-transform ${
-                    showEventTypeDropdown ? 'rotate-180' : ''
-                  }`}
+                  className={`w-4 h-4 transition-transform ${showEventTypeDropdown ? 'rotate-180' : ''
+                    }`}
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
@@ -303,14 +399,28 @@ export default function AddEventPage() {
 
             <div>
               <label className="block text-sm font-medium mb-1">Event Status</label>
-              <select
-                className="border p-3 w-full rounded-lg"
-                value={eventStatus}
-                onChange={(e) => setEventStatus(e.target.value)}
-              >
-                <option value="open">Open</option>
-                <option value="closed">Closed</option>
-              </select>
+              <div className="relative">
+                <select
+                  className="border h-[50px] px-3 w-full rounded-lg bg-white appearance-none pr-10"
+                  value={eventStatus}
+                  onChange={(e) => setEventStatus(e.target.value)}
+                >
+                  <option value="open">Open</option>
+                  <option value="closed">Closed</option>
+                </select>
+
+                <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
+                  <svg
+                    className="w-4 h-4 text-gray-800"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
               <p className="text-xs text-gray-500 mt-1">
                 Leave this as open unless you know vendors can no longer apply.
               </p>
@@ -335,6 +445,19 @@ export default function AddEventPage() {
           <h2 className="text-lg font-semibold mb-4">Links & Media</h2>
 
           <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Upload Image</label>
+              <input
+                className="border p-3 w-full rounded-lg bg-white"
+                type="file"
+                accept="image/*"
+                onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Upload from your device, or use an image URL below.
+              </p>
+            </div>
+
             <div>
               <label className="block text-sm font-medium mb-1">Image URL</label>
               <input
