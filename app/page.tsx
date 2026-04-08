@@ -206,7 +206,7 @@ export default function HomePage() {
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
           <div>
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
-              SceneRoam
+              NextFaire
             </h1>
             <p className="text-gray-700 mt-3 text-sm md:text-lg max-w-2xl">
               Discover events, find places to vend, and explore what’s happening around you.

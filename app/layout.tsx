@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Sceneroam",
+  title: "NextFaire",
   description:
     "Discover events, find places to vend, and explore what’s happening around you.",
 };

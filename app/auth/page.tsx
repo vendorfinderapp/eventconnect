@@ -11,6 +11,7 @@ export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [isLogin, setIsLogin] = useState(true)
   const [role, setRole] = useState('guest')
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -59,7 +60,7 @@ export default function AuthPage() {
       return
     }
 
-    setMessage('Account created successfully. You can now use EventConnect.')
+    setMessage('Account created successfully. You can now use NextFaire.')
     setLoading(false)
     router.push('/')
     router.refresh()
@@ -96,9 +97,9 @@ export default function AuthPage() {
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
         <div className="border rounded-2xl bg-white shadow-sm p-8 flex flex-col justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">EventConnect</h1>
+            <h1 className="text-4xl font-bold tracking-tight">NextFaire</h1>
             <p className="text-gray-600 mt-3 text-lg">
-              Discover vendor events, save favorites, and help hosts fill their listings.
+              Discover vendor events, explore experiences, and connect locally.
             </p>
 
             <div className="mt-8 space-y-4 text-sm text-gray-700">
@@ -113,8 +114,8 @@ export default function AuthPage() {
               </div>
 
               <div className="border rounded-xl p-4 bg-gray-50">
-                <h2 className="font-semibold mb-1">Simple v1 flow</h2>
-                <p>Applications still happen externally, which keeps EventConnect clean and easy to launch.</p>
+                <h2 className="font-semibold mb-1">For guests</h2>
+                <p>Discover events happening near you, explore local markets, and find things to do in your area.</p>
               </div>
             </div>
           </div>
@@ -127,11 +128,10 @@ export default function AuthPage() {
                 setMode('login')
                 setMessage('')
               }}
-              className={`px-4 py-2 rounded-lg text-sm ${
-                mode === 'login'
-                  ? 'bg-black text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm ${mode === 'login'
+                ? 'bg-black text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               Log In
             </button>
@@ -141,11 +141,10 @@ export default function AuthPage() {
                 setMode('signup')
                 setMessage('')
               }}
-              className={`px-4 py-2 rounded-lg text-sm ${
-                mode === 'signup'
-                  ? 'bg-black text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm ${mode === 'signup'
+                ? 'bg-black text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               Sign Up
             </button>
@@ -157,8 +156,12 @@ export default function AuthPage() {
             </h2>
             <p className="text-gray-600 mt-2">
               {mode === 'login'
-                ? 'Log in to save events, manage listings, and keep going.'
-                : 'Choose your account type and get started with EventConnect.'}
+                ? 'Log in to save favorites, manage your account, and keep exploring.'
+                : role === 'vendor'
+                  ? 'Create a vendor account to save events and apply to opportunities.'
+                  : role === 'host'
+                    ? 'Create a host account to post events, manage listings, and attract vendors.'
+                    : 'Create a guest account to save favorites and discover events near you.'}
             </p>
           </div>
 
@@ -208,7 +211,11 @@ export default function AuthPage() {
                   <option value="host">Host</option>
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
-                  Guests can browse and save favorites. Hosts can post and manage events.
+                  {role === 'vendor'
+                    ? 'Vendors can browse events, save favorites, and apply to opportunities.'
+                    : role === 'host'
+                      ? 'Hosts can create events, manage listings, and attract vendors.'
+                      : 'Guests can browse events, explore local markets, and save favorites.'}
                 </p>
               </div>
             )}
@@ -223,8 +230,8 @@ export default function AuthPage() {
                   ? 'Logging In...'
                   : 'Creating Account...'
                 : mode === 'login'
-                ? 'Log In'
-                : 'Create Account'}
+                  ? 'Log In'
+                  : 'Create Account'}
             </button>
 
             {message && (
