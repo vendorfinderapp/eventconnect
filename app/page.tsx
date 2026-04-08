@@ -208,7 +208,7 @@ export default function HomePage() {
             <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
               SceneRoam
             </h1>
-            <p className="text-gray-600 mt-3 text-sm md:text-lg max-w-2xl">
+            <p className="text-gray-700 mt-3 text-sm md:text-lg max-w-2xl">
               Discover events, find places to vend, and explore what’s happening around you.
             </p>
           </div>
@@ -257,7 +257,7 @@ export default function HomePage() {
             </div>
 
             {loggedIn && (
-              <span className="text-xs md:text-sm text-gray-500 break-all">
+              <span className="text-xs md:text-sm text-gray-600 break-all">
                 {userEmail} ({role})
               </span>
             )}
@@ -272,7 +272,7 @@ export default function HomePage() {
             placeholder="Search by title or location..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border p-3 rounded-lg min-w-0"
+            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
           />
 
           <input
@@ -280,20 +280,20 @@ export default function HomePage() {
             placeholder="Filter by city/state..."
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
-            className="border p-3 rounded-lg min-w-0"
+            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
           />
 
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="border p-3 rounded-lg min-w-0"
+            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
           />
 
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="border p-3 rounded-lg min-w-0"
+            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
           >
             <option value="asc">Date: Soonest First</option>
             <option value="desc">Date: Farthest Out</option>
@@ -374,7 +374,7 @@ export default function HomePage() {
       </div>
 
       {filteredEvents.length === 0 ? (
-        <div className="text-center py-12 md:py-14 text-gray-500 border rounded-2xl bg-white shadow-sm">
+        <div className="text-center py-12 md:py-14 text-gray-600 border rounded-2xl bg-white shadow-sm">
           <p className="text-lg font-medium">No events found</p>
           <p className="text-sm mt-1">Try adjusting your filters</p>
         </div>
@@ -383,12 +383,12 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 px-1">
             <div>
               <h2 className="text-xl md:text-2xl font-semibold">Upcoming Events</h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-gray-600 mt-1">
                 Browse current opportunities for vendors
               </p>
             </div>
 
-            <span className="text-sm text-gray-600 bg-white border rounded-full px-3 py-1 w-fit">
+            <span className="text-sm text-gray-700 bg-white border border-gray-300 rounded-full px-3 py-1 w-fit">
               {filteredEvents.length} results
             </span>
           </div>
@@ -419,7 +419,7 @@ export default function HomePage() {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3">
-                          <h2 className="text-lg md:text-xl font-semibold leading-tight">
+                          <h2 className="text-lg md:text-xl font-semibold leading-tight text-gray-900">
                             {event.title}
                           </h2>
 
@@ -434,16 +434,16 @@ export default function HomePage() {
                           </span>
                         </div>
 
-                        <p className="text-sm text-gray-600 mt-2 mb-3 line-clamp-3">
+                        <p className="text-sm text-gray-700 mt-2 mb-3 line-clamp-3">
                           {event.description}
                         </p>
 
                         <div className="flex gap-2 flex-wrap">
-                          <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                          <span className="text-xs bg-gray-200 text-gray-800 px-2.5 py-1 rounded-full">
                             {event.location}
                           </span>
 
-                          <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+                          <span className="text-xs bg-blue-200 text-blue-800 px-2.5 py-1 rounded-full">
                             {new Date(event.event_date).toLocaleDateString()}
                           </span>
 
@@ -452,14 +452,14 @@ export default function HomePage() {
                               key={type}
                               type="button"
                               onClick={(e) => handleTypeBadgeClick(type, e)}
-                              className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full hover:bg-purple-200 transition"
+                              className="text-xs bg-purple-200 text-purple-800 px-2.5 py-1 rounded-full hover:bg-purple-200 transition"
                             >
                               {type}
                             </button>
                           ))}
 
                           {extraTypeCount > 0 && (
-                            <span className="text-xs bg-purple-50 text-purple-600 px-2.5 py-1 rounded-full">
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">
                               +{extraTypeCount} more
                             </span>
                           )}
