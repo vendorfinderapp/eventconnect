@@ -22,6 +22,14 @@ const EVENT_TYPE_OPTIONS = [
   'Other',
 ]
 
+const STATE_OPTIONS = [
+  'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'FL', 'GA',
+  'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY', 'LA', 'ME', 'MD',
+  'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ',
+  'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR', 'PA', 'RI', 'SC',
+  'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY',
+]
+
 type EventItem = {
   id: string
   title: string
@@ -44,7 +52,8 @@ export default function HomePage() {
   const [selectedDate, setSelectedDate] = useState('')
   const [sortOrder, setSortOrder] = useState('asc')
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
-  const [locationFilter, setLocationFilter] = useState('')
+  const [cityFilter, setCityFilter] = useState('')
+  const [stateFilter, setStateFilter] = useState('')
 
   const [role, setRole] = useState<string | null>(null)
   const [loggedIn, setLoggedIn] = useState(false)
@@ -183,18 +192,22 @@ export default function HomePage() {
           selectedTypes.length === 0 ||
           eventTypes.some((type) => selectedTypes.includes(type))
 
-        const matchesLocation =
-          locationFilter === '' ||
-          event.location.toLowerCase().includes(locationFilter.toLowerCase())
+        const matchesCity =
+          cityFilter === '' ||
+          event.location.toLowerCase().includes(cityFilter.toLowerCase())
 
-        return matchesSearch && matchesDate && matchesType && matchesLocation
+        const matchesState =
+          stateFilter === '' ||
+          event.location.toLowerCase().includes(`, ${stateFilter.toLowerCase()}`)
+
+        return matchesSearch && matchesDate && matchesType && matchesCity && matchesState
       })
       .sort((a, b) =>
         sortOrder === 'asc'
           ? new Date(a.event_date).getTime() - new Date(b.event_date).getTime()
           : new Date(b.event_date).getTime() - new Date(a.event_date).getTime()
       )
-  }, [events, search, selectedDate, sortOrder, selectedTypes, locationFilter])
+  }, [events, search, selectedDate, sortOrder, selectedTypes, cityFilter, stateFilter])
 
   const toggleFavorite = async (eventId: string) => {
     if (!userId) return
@@ -227,7 +240,8 @@ export default function HomePage() {
     event.stopPropagation()
     setSelectedTypes([type])
     setSelectedDate('')
-    setLocationFilter('')
+    setCityFilter('')
+    setStateFilter('')
     setSearch('')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -295,113 +309,88 @@ export default function HomePage() {
       </div>
 
       <div className="mb-6 md:mb-8 border border-border rounded-2xl bg-secondary shadow-md p-4 md:p-5">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 items-end">
+
           <input
             type="text"
-            placeholder="Search by title or location..."
+            placeholder="Search events..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
+            className="border border-border p-3 rounded-lg text-foreground bg-card"
           />
 
           <input
             type="text"
-            placeholder="Filter by city/state..."
-            value={locationFilter}
-            onChange={(e) => setLocationFilter(e.target.value)}
-            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
+            placeholder="City..."
+            value={cityFilter}
+            onChange={(e) => setCityFilter(e.target.value)}
+            className="border border-border p-3 rounded-lg text-foreground bg-card"
           />
 
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
+            className="border border-border p-3 rounded-lg text-foreground bg-card"
           />
 
           <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
+            value={stateFilter}
+            onChange={(e) => setStateFilter(e.target.value)}
+            className="border border-border p-3 rounded-lg text-foreground bg-card"
           >
-            <option value="asc">Date: Soonest First</option>
-            <option value="desc">Date: Farthest Out</option>
+            <option value="">All States</option>
+            {STATE_OPTIONS.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
           </select>
-        </div>
 
-        <div className="mt-4" ref={typeDropdownRef}>
-          <p className="text-sm font-medium mb-2 text-foreground">Browse by Event Type</p>
-
-          <div className="relative">
+          <div ref={typeDropdownRef}>
             <button
               type="button"
               onClick={() => setIsTypeDropdownOpen((prev) => !prev)}
-              className="w-full md:w-auto min-w-[260px] border border-border rounded-lg px-4 py-3 bg-card text-left flex items-center justify-between gap-4"
+              className="w-full border border-border rounded-lg px-4 py-3 bg-card flex items-center justify-between"
             >
-              <span className="text-sm text-foreground truncate">
-                {getTypeFilterLabel()}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {isTypeDropdownOpen ? '▲' : '▼'}
-              </span>
+              <span className="text-sm">{getTypeFilterLabel()}</span>
+              <span className="text-sm">{isTypeDropdownOpen ? '▲' : '▼'}</span>
             </button>
 
             {isTypeDropdownOpen && (
-              <div className="absolute z-20 mt-2 w-full md:w-[320px] max-h-72 overflow-y-auto border border-border rounded-xl bg-card shadow-lg p-3">
-                <div className="space-y-2">
-                  {EVENT_TYPE_OPTIONS.map((type) => (
-                    <label
-                      key={type}
-                      className="flex items-center gap-3 text-sm text-foreground cursor-pointer px-2 py-2 rounded hover:bg-secondary"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selectedTypes.includes(type)}
-                        onChange={() => toggleEventType(type)}
-                      />
-                      <span>{type}</span>
-                    </label>
-                  ))}
-                </div>
-
-                <div className="pt-3 mt-3 border-t flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedTypes([])}
-                    className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90 text-sm"
-                  >
-                    Clear
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setIsTypeDropdownOpen(false)}
-                    className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm"
-                  >
-                    Done
-                  </button>
-                </div>
+              <div className="absolute z-20 mt-2 w-full max-h-72 overflow-y-auto border border-border rounded-xl bg-card shadow-lg p-3">
+                {EVENT_TYPE_OPTIONS.map((type) => (
+                  <label key={type} className="flex items-center gap-2 text-sm py-1">
+                    <input
+                      type="checkbox"
+                      checked={selectedTypes.includes(type)}
+                      onChange={() => toggleEventType(type)}
+                    />
+                    {type}
+                  </label>
+                ))}
               </div>
             )}
           </div>
-        </div>
 
-        <div className="mt-4">
-          <button
-            onClick={() => {
-              setSearch('')
-              setSelectedDate('')
-              setSortOrder('asc')
-              setSelectedTypes([])
-              setLocationFilter('')
-            }}
-            className="bg-secondary text-secondary-foreground px-4 py-3 rounded-lg hover:opacity-90 w-full md:w-auto"
-          >
-            Clear Filters
-          </button>
+          <div>
+            <button
+              onClick={() => {
+                setSearch('')
+                setSelectedDate('')
+                setSortOrder('asc')
+                setSelectedTypes([])
+                setCityFilter('')
+                setStateFilter('')
+              }}
+              className="w-full bg-secondary text-secondary-foreground px-4 py-3 rounded-lg hover:opacity-90"
+            >
+              Clear Filters
+            </button>
+          </div>
+
         </div>
       </div>
-
       {filteredEvents.length === 0 ? (
         <div className="text-center py-12 md:py-14 text-muted-foreground border border-border rounded-2xl bg-secondary shadow-md">
           <p className="text-lg font-medium">No events found</p>

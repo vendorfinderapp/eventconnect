@@ -263,29 +263,33 @@ export default function EventDetailsPage() {
           </span>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 flex flex-col sm:flex-row gap-3">
           {event.event_status === 'open' ? (
-            event.apply_link ? (
-              <a
-                href={event.apply_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center"
-              >
-                Apply to Event
-              </a>
-            ) : event.website_link ? (
-              <a
-                href={event.website_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:opacity-90"
-              >
-                Go to Event Website
-              </a>
-            ) : null
+            <>
+              {event.apply_link && (
+                <a
+                  href={event.apply_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-center w-full sm:w-auto"
+                >
+                  Apply to Event
+                </a>
+              )}
+
+              {event.website_link && (
+                <a
+                  href={event.website_link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-center w-full sm:w-auto hover:opacity-90"
+                >
+                  Visit Website
+                </a>
+              )}
+            </>
           ) : (
-            <span className="inline-block bg-secondary text-muted-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center">
+            <span className="bg-secondary text-muted-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center">
               Applications Closed
             </span>
           )}
