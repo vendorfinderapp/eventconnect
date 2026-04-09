@@ -62,47 +62,59 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: authData } = await supabase.auth.getUser()
-      const user = authData.user
+  const fetchData = async () => {
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData.user
 
-      if (user) {
-        setLoggedIn(true)
-        setUserId(user.id)
-        setUserEmail(user.email ?? null)
+    if (user) {
+      setLoggedIn(true)
+      setUserId(user.id)
+      setUserEmail(user.email ?? null)
 
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('user_id', user.id)
-          .single()
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single()
 
-        if (profile) {
-          setRole(profile.role)
-        }
+      setRole(profile?.role ?? null)
 
-        const { data: favoritesData } = await supabase
-          .from('favorites')
-          .select('event_id')
-          .eq('user_id', user.id)
+      const { data: favoritesData } = await supabase
+        .from('favorites')
+        .select('event_id')
+        .eq('user_id', user.id)
 
-        if (favoritesData) {
-          setFavoriteEventIds(favoritesData.map((item) => item.event_id))
-        }
-      }
-
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .order('event_date', { ascending: true })
-
-      if (!error && data) {
-        setEvents(data)
-      }
+      setFavoriteEventIds(favoritesData ? favoritesData.map((item) => item.event_id) : [])
+    } else {
+      setLoggedIn(false)
+      setUserId(null)
+      setUserEmail(null)
+      setRole(null)
+      setFavoriteEventIds([])
     }
 
+    const { data, error } = await supabase
+      .from('events')
+      .select('*')
+      .order('event_date', { ascending: true })
+
+    if (!error && data) {
+      setEvents(data)
+    }
+  }
+
+  fetchData()
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(() => {
     fetchData()
-  }, [supabase])
+  })
+
+  return () => {
+    subscription.unsubscribe()
+  }
+}, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -203,7 +215,7 @@ export default function HomePage() {
   return (
     <main className="max-w-6xl mx-auto px-4 py-6 md:px-6 md:py-10 bg-background text-foreground min-h-screen">
       <div className="mb-6 md:mb-8 border border-border rounded-2xl bg-secondary shadow-md p-5 md:p-8">
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <div className="flex flex-col gap-4">
           <div>
             <h1 className="text-4xl font-bold tracking-tight">
               Next<span className="text-primary font-extrabold">Faire</span>
@@ -211,58 +223,47 @@ export default function HomePage() {
             <p className="text-muted-foreground mt-3 text-sm md:text-lg max-w-2xl">
               Discover events, find places to vend, and explore what’s happening around you.
             </p>
+            <div className="flex flex-wrap gap-3 mt-4">
+  {!loggedIn && (
+    <>
+      <Link
+        href="#events"
+        className="px-5 py-3 rounded-lg bg-secondary text-secondary-foreground font-medium hover:opacity-90"
+      >
+        Browse Events
+      </Link>
+
+      <Link
+        href="/auth"
+        className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
+      >
+        Get Started
+      </Link>
+    </>
+  )}
+
+  {role === 'vendor' && (
+    <Link
+      href="#events"
+      className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
+    >
+      Find Events
+    </Link>
+  )}
+
+  {role === 'host' && (
+    <Link
+      href="/add-event"
+      className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
+    >
+      Post Event
+    </Link>
+  )}
+</div>
           </div>
 
-          <div className="flex flex-col items-start lg:items-end gap-3">
-            <div className="flex items-center justify-between w-full">
-
-              {/* LEFT SIDE - NAV */}
-              <div className="flex items-center gap-2 text-sm">
-                <Link href="/" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
-                  Home
-                </Link>
-
-                {loggedIn && (
-                  <Link href="/favorites" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
-                    Favorites
-                  </Link>
-                )}
-
-                {role === 'host' && (
-                  <Link href="/my-events" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
-                    My Events
-                  </Link>
-                )}
-              </div>
-
-              {/* RIGHT SIDE - ACTIONS */}
-              <div className="flex items-center gap-2 text-sm">
-                {!loggedIn && (
-                  <a href="/auth" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
-                    Log In / Sign Up
-                  </a>
-                )}
-
-                {role === 'host' && (
-                  <Link href="/add-event" className="px-3 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90">
-                    Post Event
-                  </Link>
-                )}
-
-                {loggedIn && (
-                  <button
-                    onClick={async () => {
-                      await supabase.auth.signOut()
-                      window.location.reload()
-                    }}
-                    className="px-3 py-2 rounded-lg bg-red-100 text-red-600 hover:opacity-90"
-                  >
-                    Log Out
-                  </button>
-                )}
-              </div>
-
-            </div>
+          <div className="flex flex-col items-start gap-3">
+            
 
             {loggedIn && (
               <span className="text-xs md:text-sm text-muted-foreground break-all">
@@ -389,7 +390,7 @@ export default function HomePage() {
       ) : (
         <>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 px-1">
-            <div>
+            <div id="events">
               <h2 className="text-xl md:text-2xl font-semibold">Upcoming Events</h2>
               <p className="text-sm text-muted-foreground mt-1">
                 Browse current opportunities for vendors
