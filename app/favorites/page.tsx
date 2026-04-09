@@ -94,15 +94,6 @@ export default function FavoritesPage() {
               Your saved vendor events
             </p>
           </div>
-
-          <div className="flex gap-3 flex-wrap">
-            <Link
-              href="/"
-              className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90"
-            >
-              Home
-            </Link>
-          </div>
         </div>
       </div>
 
@@ -140,8 +131,8 @@ export default function FavoritesPage() {
               <div
                 key={event.id}
                 className={`border border-border rounded-2xl p-4 md:p-5 flex gap-4 transition duration-200 shadow-sm ${event.event_status === 'closed'
-                    ? 'bg-secondary opacity-80'
-                    : 'bg-card'
+                  ? 'bg-secondary opacity-80'
+                  : 'bg-card'
                   }`}
               >
                 <Link href={`/events/${event.id}`} className="flex gap-4 flex-1 min-w-0">
@@ -159,8 +150,8 @@ export default function FavoritesPage() {
 
                       <span
                         className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap ${event.event_status === 'open'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-red-100 text-red-700'
+                          ? 'bg-green-100 text-green-700'
+                          : 'bg-red-100 text-red-700'
                           }`}
                       >
                         {event.event_status === 'open' ? 'Open' : 'Closed'}

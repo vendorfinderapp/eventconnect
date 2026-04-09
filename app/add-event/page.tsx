@@ -228,7 +228,7 @@ export default function AddEventPage() {
         <div className="border border-border rounded-2xl bg-card shadow-sm p-6">
           <p className="text-foreground">{message}</p>
           <Link href="/" className="underline mt-4 inline-block">
-            Back to Home
+            Go to Home
           </Link>
         </div>
       </main>
@@ -238,13 +238,9 @@ export default function AddEventPage() {
   return (
     <main className="max-w-3xl mx-auto p-10">
       <div className="mb-8">
-        <a href="/" className="underline text-sm mb-3 inline-block">
-          ← Back to Home
-        </a>
-
-        <h1 className="text-3xl font-bold tracking-tight">Add Event</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Create Event Listing</h1>
         <p className="text-muted-foreground mt-2">
-          Create a new event listing for vendors to discover and apply to.
+          Add your event so vendors can discover it and apply.
         </p>
       </div>
 

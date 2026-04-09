@@ -77,7 +77,7 @@ export default function MyEventsPage() {
         <div className="border border-border rounded-2xl bg-card shadow-sm p-8">
           <p>{message}</p>
           <Link href="/" className="underline mt-4 inline-block">
-            Back to Home
+            Go to Home
           </Link>
         </div>
       </main>
@@ -96,10 +96,6 @@ export default function MyEventsPage() {
           </div>
 
           <div className="flex gap-3 flex-wrap">
-            <Link href="/" className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
-              Home
-            </Link>
-
             <Link href="/add-event" className="px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90">
               Add Event
             </Link>

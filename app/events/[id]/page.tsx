@@ -167,7 +167,7 @@ export default function EventDetailsPage() {
     <main className="max-w-4xl mx-auto px-4 py-6 md:px-6 md:py-10 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <a href="/" className="underline inline-block w-fit">
-          ← Back to Home
+          ← Back to Events
         </a>
 
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
@@ -203,7 +203,12 @@ export default function EventDetailsPage() {
           )}
         </div>
       </div>
-
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold tracking-tight">Event Details</h1>
+        <p className="text-muted-foreground mt-2">
+          View event information, apply, and manage your listing.
+        </p>
+      </div>
       <div className="border border-border rounded-2xl shadow-sm bg-card p-4 md:p-6">
         <img
           src={event.image_url || 'https://placehold.co/800x300?text=No+Image'}
@@ -226,8 +231,8 @@ export default function EventDetailsPage() {
 
           <span
             className={`text-xs px-2.5 py-1 rounded-full ${event.event_status === 'open'
-              ? 'bg-green-100 text-green-700'
-              : 'bg-red-100 text-red-700'
+              ? 'bg-secondary text-primary'
+              : 'bg-secondary text-muted-foreground'
               }`}
           >
             {event.event_status === 'open' ? 'Open' : 'Closed'}
@@ -266,7 +271,7 @@ export default function EventDetailsPage() {
                 href={event.website_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-secondary text-secondary-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center"
+                className="inline-block bg-secondary text-secondary-foreground px-4 py-2 rounded-lg hover:opacity-90"
               >
                 Go to Event Website
               </a>

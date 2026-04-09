@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "NextFaire",
   description:
     "Discover events, find places to vend, and explore what’s happening around you.",
+  verification: {
+    google: "TuI2PRzf1yqNcf3eJV-Zi-_mg0a6-jKQ064UQRJlOPs",
+  },
 };
 
 export default function RootLayout({

@@ -197,15 +197,11 @@ export default function EditEventPage() {
           <a href={`/events/${id}`} className="underline text-sm inline-block">
             ← Back to Event
           </a>
-
-          <Link href="/" className="underline text-sm">
-            Home
-          </Link>
         </div>
 
-        <h1 className="text-3xl font-bold tracking-tight mt-3">Edit Event</h1>
+        <h1 className="text-3xl font-bold tracking-tight mt-3">Edit Event Listing</h1>
         <p className="text-muted-foreground mt-2">
-          Update your event details and keep your listing accurate.
+          Make changes to your event so vendors always have the latest details.
         </p>
       </div>
 
