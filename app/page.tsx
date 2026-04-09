@@ -62,59 +62,59 @@ export default function HomePage() {
   }
 
   useEffect(() => {
-  const fetchData = async () => {
-    const { data: authData } = await supabase.auth.getUser()
-    const user = authData.user
+    const fetchData = async () => {
+      const { data: authData } = await supabase.auth.getUser()
+      const user = authData.user
 
-    if (user) {
-      setLoggedIn(true)
-      setUserId(user.id)
-      setUserEmail(user.email ?? null)
+      if (user) {
+        setLoggedIn(true)
+        setUserId(user.id)
+        setUserEmail(user.email ?? null)
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single()
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('user_id', user.id)
+          .single()
 
-      setRole(profile?.role ?? null)
+        setRole(profile?.role ?? null)
 
-      const { data: favoritesData } = await supabase
-        .from('favorites')
-        .select('event_id')
-        .eq('user_id', user.id)
+        const { data: favoritesData } = await supabase
+          .from('favorites')
+          .select('event_id')
+          .eq('user_id', user.id)
 
-      setFavoriteEventIds(favoritesData ? favoritesData.map((item) => item.event_id) : [])
-    } else {
-      setLoggedIn(false)
-      setUserId(null)
-      setUserEmail(null)
-      setRole(null)
-      setFavoriteEventIds([])
+        setFavoriteEventIds(favoritesData ? favoritesData.map((item) => item.event_id) : [])
+      } else {
+        setLoggedIn(false)
+        setUserId(null)
+        setUserEmail(null)
+        setRole(null)
+        setFavoriteEventIds([])
+      }
+
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('event_date', { ascending: true })
+
+      if (!error && data) {
+        setEvents(data)
+      }
     }
 
-    const { data, error } = await supabase
-      .from('events')
-      .select('*')
-      .order('event_date', { ascending: true })
-
-    if (!error && data) {
-      setEvents(data)
-    }
-  }
-
-  fetchData()
-
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange(() => {
     fetchData()
-  })
 
-  return () => {
-    subscription.unsubscribe()
-  }
-}, [])
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => {
+      fetchData()
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -224,46 +224,46 @@ export default function HomePage() {
               Discover events, find places to vend, and explore what’s happening around you.
             </p>
             <div className="flex flex-wrap gap-3 mt-4">
-  {!loggedIn && (
-    <>
-      <Link
-        href="#events"
-        className="px-5 py-3 rounded-lg bg-secondary text-secondary-foreground font-medium hover:opacity-90"
-      >
-        Browse Events
-      </Link>
+              {!loggedIn && (
+                <>
+                  <Link
+                    href="#events"
+                    className="px-5 py-3 rounded-lg bg-secondary text-secondary-foreground font-medium hover:opacity-90"
+                  >
+                    Browse Events
+                  </Link>
 
-      <Link
-        href="/auth"
-        className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
-      >
-        Get Started
-      </Link>
-    </>
-  )}
+                  <Link
+                    href="/auth"
+                    className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
 
-  {role === 'vendor' && (
-    <Link
-      href="#events"
-      className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
-    >
-      Find Events
-    </Link>
-  )}
+              {role === 'vendor' && (
+                <Link
+                  href="#events"
+                  className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
+                >
+                  Find Events
+                </Link>
+              )}
 
-  {role === 'host' && (
-    <Link
-      href="/add-event"
-      className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
-    >
-      Post Event
-    </Link>
-  )}
-</div>
+              {role === 'host' && (
+                <Link
+                  href="/add-event"
+                  className="px-5 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90"
+                >
+                  Post Event
+                </Link>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col items-start gap-3">
-            
+
 
             {loggedIn && (
               <span className="text-xs md:text-sm text-muted-foreground break-all">
@@ -454,16 +454,24 @@ export default function HomePage() {
                             {new Date(event.event_date).toLocaleDateString()}
                           </span>
 
-                          {visibleTypes.map((type) => (
-                            <button
-                              key={type}
-                              type="button"
-                              onClick={(e) => handleTypeBadgeClick(type, e)}
-                              className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full hover:opacity-90 transition"
-                            >
-                              {type}
-                            </button>
-                          ))}
+                          {visibleTypes.map((type, index) => {
+                            const cleanType = Array.isArray(type) ? type.join(', ') : String(type)
+                              .replace(/^\[+|\]+$/g, '')
+                              .replace(/\\"/g, '"')
+                              .replace(/"/g, '')
+                              .trim()
+
+                            return (
+                              <button
+                                key={`${cleanType}-${index}`}
+                                type="button"
+                                onClick={(e) => handleTypeBadgeClick(cleanType, e)}
+                                className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full hover:opacity-90 transition"
+                              >
+                                {cleanType}
+                              </button>
+                            )
+                          })}
 
                           {extraTypeCount > 0 && (
                             <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
