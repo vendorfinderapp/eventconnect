@@ -158,13 +158,13 @@ export default function EventDetailsPage() {
   }
 
   if (!event) {
-    return <main className="p-6 md:p-10">Loading...</main>
+    return <main className="p-6 md:p-10 bg-background min-h-screen">Loading...</main>
   }
 
   const isOwner = userId && event.host_user_id === userId
 
   return (
-    <main className="max-w-4xl mx-auto px-4 py-6 md:px-6 md:py-10">
+    <main className="max-w-4xl mx-auto px-4 py-6 md:px-6 md:py-10 bg-background min-h-screen">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <a href="/" className="underline inline-block w-fit">
           ← Back to Home
@@ -174,11 +174,10 @@ export default function EventDetailsPage() {
           {userId && (
             <button
               onClick={toggleFavorite}
-              className={`px-4 py-2 rounded-lg w-full sm:w-auto ${
-                isFavorited
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-gray-100 text-gray-700'
-              }`}
+              className={`px-4 py-2 rounded-lg w-full sm:w-auto ${isFavorited
+                ? 'bg-secondary text-primary'
+                : 'bg-secondary text-secondary-foreground'
+                }`}
             >
               {isFavorited ? 'Saved' : 'Save Event'}
             </button>
@@ -188,7 +187,7 @@ export default function EventDetailsPage() {
             <>
               <Link
                 href={`/events/${event.id}/edit`}
-                className="bg-black text-white px-4 py-2 rounded-lg text-center w-full sm:w-auto"
+                className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-center w-full sm:w-auto"
               >
                 Edit Event
               </Link>
@@ -205,7 +204,7 @@ export default function EventDetailsPage() {
         </div>
       </div>
 
-      <div className="border rounded-2xl shadow-sm bg-white p-4 md:p-6">
+      <div className="border border-border rounded-2xl shadow-sm bg-card p-4 md:p-6">
         <img
           src={event.image_url || 'https://placehold.co/800x300?text=No+Image'}
           alt={event.title}
@@ -214,35 +213,34 @@ export default function EventDetailsPage() {
 
         <h1 className="text-2xl md:text-3xl font-bold mb-3">{event.title}</h1>
 
-        <p className="text-gray-600 mb-4 md:mb-5">{event.description}</p>
+        <p className="text-muted-foreground mb-4 md:mb-5">{event.description}</p>
 
         <div className="flex gap-2 flex-wrap mb-5 md:mb-6">
-          <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+          <span className="text-xs bg-card border border-border text-secondary-foreground px-2.5 py-1 rounded-full">
             {event.location}
           </span>
 
-          <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+          <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
             {new Date(event.event_date).toLocaleDateString()}
           </span>
 
           <span
-            className={`text-xs px-2.5 py-1 rounded-full ${
-              event.event_status === 'open'
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
-            }`}
+            className={`text-xs px-2.5 py-1 rounded-full ${event.event_status === 'open'
+              ? 'bg-green-100 text-green-700'
+              : 'bg-red-100 text-red-700'
+              }`}
           >
             {event.event_status === 'open' ? 'Open' : 'Closed'}
           </span>
 
           {event.event_type && (
-            <span className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full capitalize">
+            <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full capitalize">
               {event.event_type}
             </span>
           )}
 
           {event.application_deadline && (
-            <span className="text-xs bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
               Apply by {new Date(event.application_deadline).toLocaleDateString()}
             </span>
           )}
@@ -259,7 +257,7 @@ export default function EventDetailsPage() {
                 href={event.apply_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-blue-500 text-white px-4 py-2 rounded-lg w-full sm:w-auto text-center"
+                className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center"
               >
                 Apply to Event
               </a>
@@ -268,29 +266,29 @@ export default function EventDetailsPage() {
                 href={event.website_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-gray-800 text-white px-4 py-2 rounded-lg w-full sm:w-auto text-center"
+                className="inline-block bg-secondary text-secondary-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center"
               >
                 Go to Event Website
               </a>
             ) : null
           ) : (
-            <span className="inline-block bg-gray-300 text-gray-600 px-4 py-2 rounded-lg w-full sm:w-auto text-center">
+            <span className="inline-block bg-secondary text-muted-foreground px-4 py-2 rounded-lg w-full sm:w-auto text-center">
               Applications Closed
             </span>
           )}
         </div>
 
-        {message && <p className="mt-4 text-sm text-gray-700">{message}</p>}
+        {message && <p className="mt-4 text-sm text-muted-foreground">{message}</p>}
 
         {role === 'host' && applicants.length > 0 && (
           <div className="mt-6">
             <h2 className="text-lg font-semibold mb-3">Applicants</h2>
 
-            <ul className="text-sm text-gray-700 space-y-2">
+            <ul className="text-sm text-muted-foreground space-y-2">
               {applicants.map((app, index) => (
                 <li
                   key={index}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border rounded-xl p-3"
+                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border border-border rounded-xl p-3 bg-card"
                 >
                   <span className="break-all">
                     {app.vendor_email || app.vendor_user_id} — {app.status}

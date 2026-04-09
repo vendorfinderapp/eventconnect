@@ -185,7 +185,7 @@ export default function AddEventPage() {
         description,
         location: formattedLocation,
         event_date: eventDate,
-        image_url: finalImageUrl,
+        image_url: imageUrl,
         website_link: formattedWebsiteLink,
         apply_link: formattedApplyLink,
         event_status: eventStatus,
@@ -209,8 +209,6 @@ export default function AddEventPage() {
     setState('')
     setEventDate('')
     setImageUrl('')
-    setImageFile(null)
-    setUploadingImage(false)
     setWebsiteLink('')
     setApplyLink('')
     setEventStatus('open')
@@ -226,9 +224,9 @@ export default function AddEventPage() {
 
   if (!allowed) {
     return (
-      <main className="max-w-3xl mx-auto p-10">
-        <div className="border rounded-2xl bg-white shadow-sm p-6">
-          <p className="text-gray-700">{message}</p>
+      <main className="max-w-3xl mx-auto p-10 bg-background min-h-screen">
+        <div className="border border-border rounded-2xl bg-card shadow-sm p-6">
+          <p className="text-foreground">{message}</p>
           <Link href="/" className="underline mt-4 inline-block">
             Back to Home
           </Link>
@@ -245,12 +243,12 @@ export default function AddEventPage() {
         </a>
 
         <h1 className="text-3xl font-bold tracking-tight">Add Event</h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-muted-foreground mt-2">
           Create a new event listing for vendors to discover and apply to.
         </p>
       </div>
 
-      <div className="border rounded-2xl bg-white shadow-sm p-6 md:p-8 space-y-8">
+      <div className="border border-border rounded-2xl bg-card shadow-sm p-6 md:p-8 space-y-8">
         <div>
           <h2 className="text-lg font-semibold mb-4">Basic Information</h2>
 
@@ -258,7 +256,7 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Event Title</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="text"
                 placeholder="Enter event title"
                 value={title}
@@ -269,12 +267,12 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Description</label>
               <textarea
-                className="border p-3 w-full rounded-lg min-h-[140px]"
+                className="border border-border bg-background p-3 w-full rounded-lg min-h-[140px] text-foreground"
                 placeholder="Describe the event, audience, vendor setup, dates, or anything vendors should know."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 If the event has multiple dates, list the full schedule in the description.
               </p>
             </div>
@@ -282,7 +280,7 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Street Address</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="text"
                 placeholder="Enter street address"
                 value={streetAddress}
@@ -294,7 +292,7 @@ export default function AddEventPage() {
               <div>
                 <label className="block text-sm font-medium mb-1">City</label>
                 <input
-                  className="border p-3 w-full rounded-lg"
+                  className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                   type="text"
                   placeholder="Enter city"
                   value={city}
@@ -306,7 +304,7 @@ export default function AddEventPage() {
                 <label className="block text-sm font-medium mb-1">State</label>
                 <div className="relative">
                   <select
-                    className="border h-[50px] px-3 w-full rounded-lg bg-white appearance-none pr-10"
+                    className="border border-border h-[50px] px-3 w-full rounded-lg bg-background appearance-none pr-10 text-foreground"
                     value={state}
                     onChange={(e) => setState(e.target.value)}
                   >
@@ -320,7 +318,7 @@ export default function AddEventPage() {
 
                   <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                     <svg
-                      className="w-4 h-4 text-gray-800"
+                      className="w-4 h-4 text-muted-foreground"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -342,12 +340,12 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Event Date</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="date"
                 value={eventDate}
                 onChange={(e) => setEventDate(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Use the main date or first date for multi-day events.
               </p>
             </div>
@@ -358,7 +356,7 @@ export default function AddEventPage() {
               <button
                 type="button"
                 onClick={() => setShowEventTypeDropdown((prev) => !prev)}
-                className="border p-3 w-full rounded-lg bg-white flex items-center justify-between"
+                className="border border-border p-3 w-full rounded-lg bg-background flex items-center justify-between text-foreground"
               >
                 <span>
                   {eventTypes.length === 0
@@ -379,11 +377,11 @@ export default function AddEventPage() {
               </button>
 
               {showEventTypeDropdown && (
-                <div className="absolute z-20 mt-1 w-full bg-white border rounded-lg shadow max-h-64 overflow-y-auto">
+                <div className="absolute z-20 mt-1 w-full bg-card border border-border rounded-lg shadow max-h-64 overflow-y-auto">
                   {EVENT_TYPE_OPTIONS.map((option) => (
                     <label
                       key={option}
-                      className="flex items-center gap-2 px-3 py-2 hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center gap-2 px-3 py-2 hover:bg-secondary cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -401,7 +399,7 @@ export default function AddEventPage() {
               <label className="block text-sm font-medium mb-1">Event Status</label>
               <div className="relative">
                 <select
-                  className="border h-[50px] px-3 w-full rounded-lg bg-white appearance-none pr-10"
+                  className="border border-border h-[50px] px-3 w-full rounded-lg bg-background appearance-none pr-10 text-foreground"
                   value={eventStatus}
                   onChange={(e) => setEventStatus(e.target.value)}
                 >
@@ -411,7 +409,7 @@ export default function AddEventPage() {
 
                 <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                   <svg
-                    className="w-4 h-4 text-gray-800"
+                    className="w-4 h-4 text-muted-foreground"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
@@ -421,7 +419,7 @@ export default function AddEventPage() {
                   </svg>
                 </div>
               </div>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Leave this as open unless you know vendors can no longer apply.
               </p>
             </div>
@@ -429,12 +427,12 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Application Deadline</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="date"
                 value={applicationDeadline}
                 onChange={(e) => setApplicationDeadline(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Optional. Leave blank if you do not know the deadline.
               </p>
             </div>
@@ -448,12 +446,12 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Upload Image</label>
               <input
-                className="border p-3 w-full rounded-lg bg-white"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="file"
                 accept="image/*"
                 onChange={(e) => setImageFile(e.target.files?.[0] || null)}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Upload from your device, or use an image URL below.
               </p>
             </div>
@@ -461,7 +459,7 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Image URL</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="text"
                 placeholder="Optional image link for the event"
                 value={imageUrl}
@@ -472,13 +470,13 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Event Website</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="text"
                 placeholder="Enter website link"
                 value={websiteLink}
                 onChange={(e) => setWebsiteLink(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 Vendors will be sent here if no separate apply link is provided.
               </p>
             </div>
@@ -486,13 +484,13 @@ export default function AddEventPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Apply Link</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="text"
                 placeholder="Optional direct apply link"
                 value={applyLink}
                 onChange={(e) => setApplyLink(e.target.value)}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 If provided, vendors will go directly to this application link.
               </p>
             </div>
@@ -503,12 +501,12 @@ export default function AddEventPage() {
           <button
             onClick={handleSubmit}
             disabled={saving}
-            className="bg-black text-white px-5 py-3 rounded-lg disabled:opacity-50"
+            className="bg-primary text-primary-foreground px-5 py-3 rounded-lg disabled:opacity-50"
           >
             {saving ? 'Creating Event...' : 'Create Event'}
           </button>
 
-          {message && <p className="text-sm text-gray-700">{message}</p>}
+          {message && <p className="text-sm text-foreground">{message}</p>}
         </div>
       </div>
     </main>

@@ -93,27 +93,29 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-10">
+    <main className="min-h-screen bg-background px-4 py-10">
       <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-        <div className="border rounded-2xl bg-white shadow-sm p-8 flex flex-col justify-between">
+        <div className="border border-border rounded-2xl bg-card shadow-sm p-8 flex flex-col justify-between">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">NextFaire</h1>
-            <p className="text-gray-600 mt-3 text-lg">
+            <h1 className="text-4xl font-bold tracking-tight">
+              Next<span className="text-primary font-extrabold">Faire</span>
+            </h1>
+            <p className="text-muted-foreground mt-3 text-lg">
               Discover vendor events, explore experiences, and connect locally.
             </p>
 
-            <div className="mt-8 space-y-4 text-sm text-gray-700">
-              <div className="border rounded-xl p-4 bg-gray-50">
+            <div className="mt-8 space-y-4 text-sm text-secondary-foreground">
+              <div className="border border-border rounded-xl p-4 bg-secondary">
                 <h2 className="font-semibold mb-1">For vendors</h2>
                 <p>Browse events, save favorites, and go straight to application links.</p>
               </div>
 
-              <div className="border rounded-xl p-4 bg-gray-50">
+              <div className="border border-border rounded-xl p-4 bg-secondary">
                 <h2 className="font-semibold mb-1">For hosts</h2>
                 <p>Create events, manage listings, edit details, and keep opportunities updated.</p>
               </div>
 
-              <div className="border rounded-xl p-4 bg-gray-50">
+              <div className="border border-border rounded-xl p-4 bg-secondary">
                 <h2 className="font-semibold mb-1">For guests</h2>
                 <p>Discover events happening near you, explore local markets, and find things to do in your area.</p>
               </div>
@@ -121,7 +123,7 @@ export default function AuthPage() {
           </div>
         </div>
 
-        <div className="border rounded-2xl bg-white shadow-sm p-8">
+        <div className="border border-border rounded-2xl bg-card shadow-sm p-8">
           <div className="flex gap-2 mb-6">
             <button
               onClick={() => {
@@ -129,8 +131,8 @@ export default function AuthPage() {
                 setMessage('')
               }}
               className={`px-4 py-2 rounded-lg text-sm ${mode === 'login'
-                ? 'bg-black text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-primary text-primary-foreground'
+                : ':bg-secondary text-secondary-foreground hover:opacity-90'
                 }`}
             >
               Log In
@@ -142,8 +144,8 @@ export default function AuthPage() {
                 setMessage('')
               }}
               className={`px-4 py-2 rounded-lg text-sm ${mode === 'signup'
-                ? 'bg-black text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-primary text-primary-foreground'
+                : ':bg-secondary text-secondary-foreground hover:opacity-90'
                 }`}
             >
               Sign Up
@@ -154,7 +156,7 @@ export default function AuthPage() {
             <h2 className="text-2xl font-semibold">
               {mode === 'login' ? 'Welcome back' : 'Create your account'}
             </h2>
-            <p className="text-gray-600 mt-2">
+            <p className="text-muted-foreground mt-2">
               {mode === 'login'
                 ? 'Log in to save favorites, manage your account, and keep exploring.'
                 : role === 'vendor'
@@ -169,7 +171,7 @@ export default function AuthPage() {
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
               <input
-                className="border p-3 w-full rounded-lg"
+                className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                 type="email"
                 placeholder="you@example.com"
                 value={email}
@@ -181,7 +183,7 @@ export default function AuthPage() {
               <label className="block text-sm font-medium mb-1">Password</label>
               <div className="flex gap-2">
                 <input
-                  className="border p-3 w-full rounded-lg"
+                  className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                   type={showPassword ? 'text' : 'password'}
                   placeholder="Enter password"
                   value={password}
@@ -191,7 +193,7 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="px-4 rounded-lg bg-gray-100 hover:bg-gray-200"
+                  className="px-4 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90"
                 >
                   {showPassword ? 'Hide' : 'Show'}
                 </button>
@@ -202,7 +204,7 @@ export default function AuthPage() {
               <div>
                 <label className="block text-sm font-medium mb-1">Account Type</label>
                 <select
-                  className="border p-3 w-full rounded-lg"
+                  className="border border-border bg-background p-3 w-full rounded-lg text-foreground"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                 >
@@ -210,7 +212,7 @@ export default function AuthPage() {
                   <option value="vendor">Vendor</option>
                   <option value="host">Host</option>
                 </select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {role === 'vendor'
                     ? 'Vendors can browse events, save favorites, and apply to opportunities.'
                     : role === 'host'
@@ -223,7 +225,7 @@ export default function AuthPage() {
             <button
               onClick={mode === 'login' ? handleLogin : handleSignUp}
               disabled={loading}
-              className="w-full bg-black text-white py-3 rounded-lg disabled:opacity-50"
+              className="w-full bg-primary text-primary-foreground py-3 rounded-lg disabled:opacity-50"
             >
               {loading
                 ? mode === 'login'
@@ -235,13 +237,13 @@ export default function AuthPage() {
             </button>
 
             {message && (
-              <div className="border rounded-xl bg-gray-50 p-3 text-sm text-gray-700">
+              <div className="border border-border rounded-xl bg-secondary p-3 text-sm text-secondary-foreground">
                 {message}
               </div>
             )}
           </div>
 
-          <div className="mt-6 text-sm text-gray-600">
+          <div className="mt-6 text-sm text-muted-foreground">
             <a href="/" className="underline">
               Back to Home
             </a>

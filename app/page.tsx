@@ -201,63 +201,71 @@ export default function HomePage() {
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-6 md:px-6 md:py-10">
-      <div className="mb-6 md:mb-8 border rounded-2xl bg-white shadow-sm p-5 md:p-8">
+    <main className="max-w-6xl mx-auto px-4 py-6 md:px-6 md:py-10 bg-background text-foreground min-h-screen">
+      <div className="mb-6 md:mb-8 border border-border rounded-2xl bg-secondary shadow-md p-5 md:p-8">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
           <div>
-            <h1 className="text-3xl md:text-5xl font-bold tracking-tight">
-              NextFaire
+            <h1 className="text-4xl font-bold tracking-tight">
+              Next<span className="text-primary font-extrabold">Faire</span>
             </h1>
-            <p className="text-gray-700 mt-3 text-sm md:text-lg max-w-2xl">
+            <p className="text-muted-foreground mt-3 text-sm md:text-lg max-w-2xl">
               Discover events, find places to vend, and explore what’s happening around you.
             </p>
           </div>
 
           <div className="flex flex-col items-start lg:items-end gap-3">
-            <div className="flex flex-wrap gap-2 text-sm w-full lg:justify-end">
-              <Link href="/" className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                Home
-              </Link>
+            <div className="flex items-center justify-between w-full">
 
-              {loggedIn && (
-                <Link href="/favorites" className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                  Favorites
+              {/* LEFT SIDE - NAV */}
+              <div className="flex items-center gap-2 text-sm">
+                <Link href="/" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
+                  Home
                 </Link>
-              )}
 
-              {role === 'host' && (
-                <Link href="/my-events" className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                  My Events
-                </Link>
-              )}
+                {loggedIn && (
+                  <Link href="/favorites" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
+                    Favorites
+                  </Link>
+                )}
 
-              {!loggedIn && (
-                <a href="/auth" className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200">
-                  Log In / Sign Up
-                </a>
-              )}
+                {role === 'host' && (
+                  <Link href="/my-events" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
+                    My Events
+                  </Link>
+                )}
+              </div>
 
-              {role === 'host' && (
-                <Link href="/add-event" className="px-3 py-2 rounded-lg bg-black text-white hover:opacity-90">
-                  Post Event
-                </Link>
-              )}
+              {/* RIGHT SIDE - ACTIONS */}
+              <div className="flex items-center gap-2 text-sm">
+                {!loggedIn && (
+                  <a href="/auth" className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90">
+                    Log In / Sign Up
+                  </a>
+                )}
 
-              {loggedIn && (
-                <button
-                  onClick={async () => {
-                    await supabase.auth.signOut()
-                    window.location.reload()
-                  }}
-                  className="px-3 py-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100"
-                >
-                  Log Out
-                </button>
-              )}
+                {role === 'host' && (
+                  <Link href="/add-event" className="px-3 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90">
+                    Post Event
+                  </Link>
+                )}
+
+                {loggedIn && (
+                  <button
+                    onClick={async () => {
+                      await supabase.auth.signOut()
+                      window.location.reload()
+                    }}
+                    className="px-3 py-2 rounded-lg bg-red-100 text-red-600 hover:opacity-90"
+                  >
+                    Log Out
+                  </button>
+                )}
+              </div>
+
             </div>
 
             {loggedIn && (
-              <span className="text-xs md:text-sm text-gray-600 break-all">
+              <span className="text-xs md:text-sm text-muted-foreground break-all">
                 {userEmail} ({role})
               </span>
             )}
@@ -265,14 +273,14 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="mb-6 md:mb-8 border rounded-2xl bg-white shadow-sm p-4 md:p-5">
+      <div className="mb-6 md:mb-8 border border-border rounded-2xl bg-secondary shadow-md p-4 md:p-5">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
           <input
             type="text"
             placeholder="Search by title or location..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
+            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
           />
 
           <input
@@ -280,20 +288,20 @@ export default function HomePage() {
             placeholder="Filter by city/state..."
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
-            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
+            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
           />
 
           <input
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
+            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
           />
 
           <select
             value={sortOrder}
             onChange={(e) => setSortOrder(e.target.value)}
-            className="border border-gray-300 p-3 rounded-lg min-w-0 text-gray-900 placeholder-gray-500 bg-white"
+            className="border border-border p-3 rounded-lg min-w-0 text-foreground placeholder:text-muted-foreground bg-card"
           >
             <option value="asc">Date: Soonest First</option>
             <option value="desc">Date: Farthest Out</option>
@@ -301,29 +309,29 @@ export default function HomePage() {
         </div>
 
         <div className="mt-4" ref={typeDropdownRef}>
-          <p className="text-sm font-medium mb-2">Browse by Event Type</p>
+          <p className="text-sm font-medium mb-2 text-foreground">Browse by Event Type</p>
 
           <div className="relative">
             <button
               type="button"
               onClick={() => setIsTypeDropdownOpen((prev) => !prev)}
-              className="w-full md:w-auto min-w-[260px] border rounded-lg px-4 py-3 bg-white text-left flex items-center justify-between gap-4"
+              className="w-full md:w-auto min-w-[260px] border border-border rounded-lg px-4 py-3 bg-card text-left flex items-center justify-between gap-4"
             >
-              <span className="text-sm text-gray-700 truncate">
+              <span className="text-sm text-foreground truncate">
                 {getTypeFilterLabel()}
               </span>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-muted-foreground">
                 {isTypeDropdownOpen ? '▲' : '▼'}
               </span>
             </button>
 
             {isTypeDropdownOpen && (
-              <div className="absolute z-20 mt-2 w-full md:w-[320px] max-h-72 overflow-y-auto border rounded-xl bg-white shadow-lg p-3">
+              <div className="absolute z-20 mt-2 w-full md:w-[320px] max-h-72 overflow-y-auto border border-border rounded-xl bg-card shadow-lg p-3">
                 <div className="space-y-2">
                   {EVENT_TYPE_OPTIONS.map((type) => (
                     <label
                       key={type}
-                      className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer px-2 py-2 rounded hover:bg-gray-50"
+                      className="flex items-center gap-3 text-sm text-foreground cursor-pointer px-2 py-2 rounded hover:bg-secondary"
                     >
                       <input
                         type="checkbox"
@@ -339,7 +347,7 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => setSelectedTypes([])}
-                    className="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-sm"
+                    className="px-3 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90 text-sm"
                   >
                     Clear
                   </button>
@@ -347,7 +355,7 @@ export default function HomePage() {
                   <button
                     type="button"
                     onClick={() => setIsTypeDropdownOpen(false)}
-                    className="px-3 py-2 rounded-lg bg-black text-white text-sm"
+                    className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm"
                   >
                     Done
                   </button>
@@ -366,7 +374,7 @@ export default function HomePage() {
               setSelectedTypes([])
               setLocationFilter('')
             }}
-            className="bg-gray-100 px-4 py-3 rounded-lg hover:bg-gray-200 w-full md:w-auto"
+            className="bg-secondary text-secondary-foreground px-4 py-3 rounded-lg hover:opacity-90 w-full md:w-auto"
           >
             Clear Filters
           </button>
@@ -374,7 +382,7 @@ export default function HomePage() {
       </div>
 
       {filteredEvents.length === 0 ? (
-        <div className="text-center py-12 md:py-14 text-gray-600 border rounded-2xl bg-white shadow-sm">
+        <div className="text-center py-12 md:py-14 text-muted-foreground border border-border rounded-2xl bg-secondary shadow-md">
           <p className="text-lg font-medium">No events found</p>
           <p className="text-sm mt-1">Try adjusting your filters</p>
         </div>
@@ -383,12 +391,12 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 px-1">
             <div>
               <h2 className="text-xl md:text-2xl font-semibold">Upcoming Events</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Browse current opportunities for vendors
               </p>
             </div>
 
-            <span className="text-sm text-gray-700 bg-white border border-gray-300 rounded-full px-3 py-1 w-fit">
+            <span className="text-sm text-foreground bg-card border border-border rounded-full px-3 py-1 w-fit">
               {filteredEvents.length} results
             </span>
           </div>
@@ -403,11 +411,10 @@ export default function HomePage() {
               return (
                 <div
                   key={event.id}
-                  className={`border rounded-2xl p-4 md:p-5 transition duration-200 shadow-sm ${
-                    event.event_status === 'closed'
-                      ? 'bg-gray-50 opacity-80'
-                      : 'bg-white hover:shadow-md'
-                  }`}
+                  className={`border border-border rounded-2xl p-4 md:p-5 transition duration-200 shadow-sm ${event.event_status === 'closed'
+                    ? 'bg-secondary opacity-80'
+                    : 'bg-card hover:shadow-md'
+                    }`}
                 >
                   <div className="flex flex-col sm:flex-row gap-4">
                     <Link href={`/events/${event.id}`} className="flex flex-col sm:flex-row gap-4 flex-1 min-w-0">
@@ -419,31 +426,30 @@ export default function HomePage() {
 
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3">
-                          <h2 className="text-lg md:text-xl font-semibold leading-tight text-gray-900">
+                          <h2 className="text-lg md:text-xl font-semibold leading-tight text-foreground">
                             {event.title}
                           </h2>
 
                           <span
-                            className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap w-fit ${
-                              event.event_status === 'open'
-                                ? 'bg-green-100 text-green-700'
-                                : 'bg-red-100 text-red-700'
-                            }`}
+                            className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap w-fit ${event.event_status === 'open'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-red-100 text-red-700'
+                              }`}
                           >
                             {event.event_status === 'open' ? 'Open' : 'Closed'}
                           </span>
                         </div>
 
-                        <p className="text-sm text-gray-700 mt-2 mb-3 line-clamp-3">
+                        <p className="text-sm text-muted-foreground mt-2 mb-3 line-clamp-3">
                           {event.description}
                         </p>
 
                         <div className="flex gap-2 flex-wrap">
-                          <span className="text-xs bg-gray-200 text-gray-800 px-2.5 py-1 rounded-full">
+                          <span className="text-xs bg-card border border-border text-secondary-foreground px-2.5 py-1 rounded-full">
                             {event.location}
                           </span>
 
-                          <span className="text-xs bg-blue-200 text-blue-800 px-2.5 py-1 rounded-full">
+                          <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
                             {new Date(event.event_date).toLocaleDateString()}
                           </span>
 
@@ -452,20 +458,20 @@ export default function HomePage() {
                               key={type}
                               type="button"
                               onClick={(e) => handleTypeBadgeClick(type, e)}
-                              className="text-xs bg-purple-200 text-purple-800 px-2.5 py-1 rounded-full hover:bg-purple-200 transition"
+                              className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full hover:opacity-90 transition"
                             >
                               {type}
                             </button>
                           ))}
 
                           {extraTypeCount > 0 && (
-                            <span className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">
+                            <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
                               +{extraTypeCount} more
                             </span>
                           )}
 
                           {event.application_deadline && (
-                            <span className="text-xs bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full">
+                            <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
                               Apply by {new Date(event.application_deadline).toLocaleDateString()}
                             </span>
                           )}
@@ -476,11 +482,10 @@ export default function HomePage() {
                     {loggedIn && (
                       <button
                         onClick={() => toggleFavorite(event.id)}
-                        className={`shrink-0 self-start sm:self-start px-3 py-2 rounded-lg text-sm w-full sm:w-auto ${
-                          isFavorited
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}
+                        className={`shrink-0 self-start sm:self-start px-3 py-2 rounded-lg text-sm w-full sm:w-auto ${isFavorited
+                          ? 'bg-accent/15 text-accent'
+                          : 'bg-secondary text-secondary-foreground'
+                          }`}
                       >
                         {isFavorited ? 'Saved' : 'Save'}
                       </button>

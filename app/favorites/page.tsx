@@ -81,16 +81,16 @@ export default function FavoritesPage() {
   }
 
   if (loading) {
-    return <main className="max-w-6xl mx-auto px-4 py-8 md:px-6 md:py-10">Loading...</main>
+    return <main className="max-w-6xl mx-auto px-4 py-8 md:px-6 md:py-10 bg-background min-h-screen">Loading...</main>
   }
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8 md:px-6 md:py-10">
-      <div className="mb-8 border rounded-2xl bg-white shadow-sm p-6 md:p-8">
+    <main className="max-w-6xl mx-auto px-4 py-8 md:px-6 md:py-10 bg-background min-h-screen">
+      <div className="mb-8 border border-border rounded-2xl bg-secondary shadow-md p-6 md:p-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-4xl font-bold tracking-tight">Favorites</h1>
-            <p className="text-gray-600 mt-2 text-base md:text-lg">
+            <p className="text-muted-foreground mt-2 text-base md:text-lg">
               Your saved vendor events
             </p>
           </div>
@@ -98,7 +98,7 @@ export default function FavoritesPage() {
           <div className="flex gap-3 flex-wrap">
             <Link
               href="/"
-              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+              className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:opacity-90"
             >
               Home
             </Link>
@@ -107,7 +107,7 @@ export default function FavoritesPage() {
       </div>
 
       {events.length === 0 ? (
-        <div className="text-center py-14 text-gray-500 border rounded-2xl bg-white shadow-sm">
+        <div className="text-center py-14 text-muted-foreground border border-border rounded-2xl bg-card shadow-sm">
           <p className="text-lg font-medium">No saved events yet</p>
           <p className="text-sm mt-1">
             Save events from the homepage or event page to keep track of the ones you like.
@@ -115,7 +115,7 @@ export default function FavoritesPage() {
 
           <Link
             href="/"
-            className="inline-block mt-4 px-4 py-2 rounded-lg bg-black text-white hover:opacity-90"
+            className="inline-block mt-4 px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90"
           >
             Browse Events
           </Link>
@@ -125,12 +125,12 @@ export default function FavoritesPage() {
           <div className="flex items-center justify-between mb-4 px-1">
             <div>
               <h2 className="text-2xl font-semibold">Saved Events</h2>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted-foreground mt-1">
                 Quickly revisit the events you want to keep an eye on
               </p>
             </div>
 
-            <span className="text-sm text-gray-600 bg-white border rounded-full px-3 py-1">
+            <span className="text-sm text-foreground bg-card border border-border rounded-full px-3 py-1">
               {events.length} saved
             </span>
           </div>
@@ -139,11 +139,10 @@ export default function FavoritesPage() {
             {events.map((event) => (
               <div
                 key={event.id}
-                className={`border rounded-2xl p-4 md:p-5 flex gap-4 transition duration-200 shadow-sm ${
-                  event.event_status === 'closed'
-                    ? 'bg-gray-50 opacity-80'
-                    : 'bg-white'
-                }`}
+                className={`border border-border rounded-2xl p-4 md:p-5 flex gap-4 transition duration-200 shadow-sm ${event.event_status === 'closed'
+                    ? 'bg-secondary opacity-80'
+                    : 'bg-card'
+                  }`}
               >
                 <Link href={`/events/${event.id}`} className="flex gap-4 flex-1 min-w-0">
                   <img
@@ -159,37 +158,36 @@ export default function FavoritesPage() {
                       </h2>
 
                       <span
-                        className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap ${
-                          event.event_status === 'open'
+                        className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap ${event.event_status === 'open'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                        }`}
+                          }`}
                       >
                         {event.event_status === 'open' ? 'Open' : 'Closed'}
                       </span>
                     </div>
 
-                    <p className="text-sm text-gray-600 mt-2 mb-3 line-clamp-3">
+                    <p className="text-sm text-muted-foreground mt-2 mb-3 line-clamp-3">
                       {event.description}
                     </p>
 
                     <div className="flex gap-2 flex-wrap">
-                      <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">
+                      <span className="text-xs bg-card border border-border text-secondary-foreground px-2.5 py-1 rounded-full">
                         {event.location}
                       </span>
 
-                      <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full">
+                      <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
                         {new Date(event.event_date).toLocaleDateString()}
                       </span>
 
                       {event.event_type && (
-                        <span className="text-xs bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full capitalize">
+                        <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full capitalize">
                           {event.event_type}
                         </span>
                       )}
 
                       {event.application_deadline && (
-                        <span className="text-xs bg-yellow-100 text-yellow-700 px-2.5 py-1 rounded-full">
+                        <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
                           Apply by {new Date(event.application_deadline).toLocaleDateString()}
                         </span>
                       )}
@@ -199,7 +197,7 @@ export default function FavoritesPage() {
 
                 <button
                   onClick={() => removeFavorite(event.id)}
-                  className="shrink-0 self-start px-3 py-2 rounded-lg text-sm bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
+                  className="shrink-0 self-start px-3 py-2 rounded-lg text-sm bg-secondary text-secondary-foreground hover:opacity-90"
                 >
                   Remove
                 </button>
