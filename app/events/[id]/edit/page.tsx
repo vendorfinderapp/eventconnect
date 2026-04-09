@@ -50,10 +50,30 @@ export default function EditEventPage() {
   const eventTypeDropdownRef = useRef<HTMLDivElement | null>(null)
 
   const normalizeEventTypes = (eventType?: string | string[]) => {
-    if (!eventType) return []
-    if (Array.isArray(eventType)) return eventType
-    return [eventType]
+  if (!eventType) return []
+
+  if (Array.isArray(eventType)) {
+    return eventType.flatMap((item) =>
+      String(item)
+        .replace(/\\/g, '')
+        .replace(/\[/g, '')
+        .replace(/\]/g, '')
+        .replace(/"/g, '')
+        .split(',')
+        .map((part) => part.trim())
+        .filter(Boolean)
+    )
   }
+
+  return String(eventType)
+    .replace(/\\/g, '')
+    .replace(/\[/g, '')
+    .replace(/\]/g, '')
+    .replace(/"/g, '')
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean)
+}
 
   useEffect(() => {
     const fetchEvent = async () => {

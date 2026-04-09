@@ -239,8 +239,16 @@ export default function EventDetailsPage() {
           </span>
 
           {event.event_type && (
-            <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full capitalize">
-              {event.event_type}
+            <span className="text-xs bg-secondary text-primary px-2.5 py-1 rounded-full">
+              {String(event.event_type)
+                .replace(/\\/g, '')
+                .replace(/\[/g, '')
+                .replace(/\]/g, '')
+                .replace(/"/g, '')
+                .split(',')
+                .map((part) => part.trim())
+                .filter(Boolean)
+                .join(', ')}
             </span>
           )}
 
